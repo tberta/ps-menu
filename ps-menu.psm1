@@ -1,8 +1,8 @@
-function DrawMenu {
+﻿function DrawMenu {
     param ($menuItems, $menuPosition, $Multiselect, $selection)
     $l = $menuItems.length
     for ($i = 0; $i -le $l;$i++) {
-		if ($menuItems[$i] -ne $null){
+		if ($null -ne $menuItems[$i]){
 			$item = $menuItems[$i]
 			if ($Multiselect)
 			{
@@ -12,7 +12,15 @@ function DrawMenu {
 				else {
 					$item = '[ ] ' + $item
 				}
+				$MaxLength = [System.Console]::WindowWidth - 7
+			} Else {
+				$MaxLength = [System.Console]::WindowWidth - 3
 			}
+
+			if ($item.Length -gt $MaxLength) {
+				$item = $item.Substring(0, $MaxLength) + '…'
+			}
+
 			if ($i -eq $menuPosition) {
 				Write-Host "> $($item)" -ForegroundColor Green
 			} else {
@@ -25,7 +33,7 @@ function DrawMenu {
 function Toggle-Selection {
 	param ($pos, [array]$selection)
 	if ($selection -contains $pos){ 
-		$result = $selection | where {$_ -ne $pos}
+		$result = $selection | Where-Object {$_ -ne $pos}
 	}
 	else {
 		$selection += $pos
@@ -72,7 +80,7 @@ function Menu {
 		$pos = $null
 	}
 
-    if ($ReturnIndex -eq $false -and $pos -ne $null)
+    if ($ReturnIndex -eq $false -and $null -ne $pos)
 	{
 		if ($Multiselect){
 			return $menuItems[$selection]
